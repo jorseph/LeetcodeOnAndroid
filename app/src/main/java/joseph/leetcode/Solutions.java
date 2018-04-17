@@ -156,4 +156,170 @@ public class Solutions {
         }
         return ans;
     }
+
+    // ****
+    // ******//
+    List<String> ans;
+    boolean[] temp;
+    public List<String> readBinaryWatch(int num) {
+        temp = new boolean[10];
+        ans = new ArrayList<String>();
+        arrage(num);
+        return ans;
+
+    }
+
+    public void arrage(int num) {
+        if(num == 0) {
+            ans.add(readTime(temp));
+        } else {
+            for (int i = 0; i < 10; i++) {
+                if (!temp[i]) {
+                    temp[i] = true;
+                    num--;
+                    arrage(num);
+                    temp[i] = false;
+                    num++;
+                }
+            }
+        }
+    }
+
+    public String readTime(boolean[] time) {
+        String s_time = "";
+        int min = 0, hour = 0;
+        for(int i = 0; i < time.length; i++) {
+            if(i < 4) {
+                hour += 1 << i;
+            } else {
+                if(time[i]) {
+                    min += 1 << (i - 4);
+                }
+            }
+        }
+        s_time = String.valueOf(hour) + ":" + String.valueOf(min);
+        return s_time;
+    }
+
+    public int searchInsert2(int[] nums, int target) {
+        int ans = 0;
+        for(int i = 0; i < nums.length; i++) {
+            if(i == nums.length - 1 & ans == 0) {
+                ans = nums.length;
+            }
+            if(nums[i] >= target ) {
+                ans = i;
+                break;
+            }
+        }
+        return ans;
+    }
+
+    public int searchInsert(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+
+        while(left <= right) {
+            int mid = (right - left)/2 + left;
+            if(nums[mid] == target) {
+                return mid;
+            }
+
+            if(nums[mid] > target) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    public int maxArea(int[] height) {
+        int ans = 0, right = height.length - 1, left = 0;
+        while(left < right) {
+            if(height[left] < height[right]) {
+                ans = Math.max(ans, height[left]*(right - left));
+                left++;
+            } else {
+                ans = Math.max(ans, height[right]*(right - left));
+                right--;
+            }
+        }
+        return ans;
+    }
+
+    public int threeSumClosest(int[] nums, int target) {
+        int ans = 0;
+        int temp_diff = Integer.MAX_VALUE;
+
+        if(nums == null || nums.length < 3) {
+            return 0;
+        }
+
+        Arrays.sort(nums);
+
+        for(int i = 0; i < nums.length - 2; i++) {
+            int left = i + 1, right = nums.length - 1;
+            while(left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                int diff = target - sum;
+                if(Math.abs(temp_diff) > Math.abs(diff)) {
+                    temp_diff = diff;
+                    ans = sum;
+                }
+
+                if(sum < target) left++;
+                else if(sum > target) right--;
+                else return sum;
+            }
+        }
+        return ans;
+    }
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<List<Integer>>();
+
+        if(nums == null || nums.length < 3) {
+            return ans;
+        }  else if(nums.length == 3) {
+            if(nums[0] + nums[1] + nums[2] == 0) {
+                List<Integer> temp = new ArrayList<Integer>();
+                temp.add(nums[0]);
+                temp.add(nums[1]);
+                temp.add(nums[2]);
+                ans.add(temp);
+                return ans;
+            }
+        }
+        Arrays.sort(nums);
+        for(int i = 0; i < nums.length - 2; i++) {
+            int left = i + 1, right = nums.length - 1;
+            while(left < right) {
+                //temp.clear();
+                List<Integer> temp = new ArrayList<Integer>();
+                int sum = nums[i] + nums[left] + nums[right];
+                if(sum < 0) left++;
+                else if(sum > 0) right--;
+                else {
+                    temp.add(nums[i]);
+                    temp.add(nums[left]);
+                    temp.add(nums[right]);
+                    ans.add(temp);
+                    while(nums[left] == nums[left + 1] & (left + 1) < right) {
+                        left++;
+                    }
+
+                    while(nums[right] == nums[right - 1] & (right - 1) > left) {
+                        right--;
+                    }
+                    left++;
+                    right--;
+
+                    while(i < nums.length - 2 && nums[i] == nums[i + 1]) {
+                        i++;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
 }
